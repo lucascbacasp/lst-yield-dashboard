@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meta Pool — LST Utility Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0a0e1a;
+      --bg-secondary: #111827;
+      --bg-card: #1a2035;
+      --bg-card-hover: #1f2847;
+      --border: #2a3352;
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --accent-purple: #8b5cf6;
+      --accent-blue: #3b82f6;
+      --accent-cyan: #06b6d4;
+      --accent-green: #10b981;
+      --accent-orange: #f59e0b;
+      --accent-pink: #ec4899;
+      --accent-red: #ef4444;
+      --near-color: #00c08b;
+      --eth-color: #627eea;
+      --sol-color: #9945ff;
+      --icp-color: #29abe2;
+      --story-color: #ff6b6b;
+      --gradient-1: linear-gradient(135deg, #8b5cf6, #3b82f6);
+      --gradient-2: linear-gradient(135deg, #06b6d4, #10b981);
+      --gradient-near: linear-gradient(135deg, #00c08b, #00a67d);
+      --gradient-eth: linear-gradient(135deg, #627eea, #4f6ed4);
+      --gradient-sol: linear-gradient(135deg, #9945ff, #14f195);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Ambient background glow */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(ellipse at 30% 20%, rgba(139, 92, 246, 0.06) 0%, transparent 50%),
+                  radial-gradient(ellipse at 70% 80%, rgba(6, 182, 212, 0.04) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .app { position: relative; z-index: 1; }
+
+    /* ── NAV ── */
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 32px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(17, 24, 39, 0.8);
+      backdrop-filter: blur(20px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-logo {
+      width: 36px;
+      height: 36px;
+      background: var(--gradient-1);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 18px;
+      color: white;
+    }
+
+    .nav-title {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-title span {
+      color: var(--accent-purple);
+    }
+
+    .nav-badge {
+      font-size: 11px;
+      padding: 3px 8px;
+      background: rgba(139, 92, 246, 0.15);
+      color: var(--accent-purple);
+      border-radius: 6px;
+      font-weight: 600;
+      margin-left: 8px;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--accent-green);
+    }
+
+    .nav-status .dot {
+      width: 7px;
+      height: 7px;
+      background: var(--accent-green);
+      border-radius: 50%;
+      animation: pulse-dot 2s infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .btn-connect {
+      padding: 8px 20px;
+      background: var(--gradient-1);
+      border: none;
+      border-radius: 10px;
+      color: white;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-connect:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
+    }
+
+    /* ── MAIN ── */
+    .main {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 32px 24px;
+    }
+
+    /* ── HERO STATS ── */
+    .hero-section {
+      margin-bottom: 32px;
+    }
+
+    .hero-title {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 4px;
+    }
+
+    .hero-sub {
+      color: var(--text-secondary);
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+    }
+
+    .stat-card:nth-child(1)::before { background: var(--gradient-1); }
+    .stat-card:nth-child(2)::before { background: var(--gradient-2); }
+    .stat-card:nth-child(3)::before { background: linear-gradient(135deg, #f59e0b, #ef4444); }
+    .stat-card:nth-child(4)::before { background: linear-gradient(135deg, #ec4899, #8b5cf6); }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .stat-change {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 6px;
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+
+    .stat-change.up {
+      color: var(--accent-green);
+      background: rgba(16, 185, 129, 0.1);
+    }
+
+    .stat-change.down {
+      color: var(--accent-red);
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    /* ── CHAIN TABS ── */
+    .chain-filter {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .chain-tab {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .chain-tab:hover {
+      background: var(--bg-card-hover);
+      border-color: #3d4a73;
+    }
+
+    .chain-tab.active {
+      border-color: var(--accent-purple);
+      background: rgba(139, 92, 246, 0.1);
+      color: var(--text-primary);
+    }
+
+    .chain-tab .chain-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .chain-tab .chain-count {
+      font-size: 11px;
+      padding: 1px 6px;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.06);
+    }
+
+    /* ── SORT BAR ── */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .toolbar-title {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .toolbar-count {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .sort-select {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 8px 14px;
+      color: var(--text-primary);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    /* ── TOKEN SECTION ── */
+    .token-section {
+      margin-bottom: 32px;
+    }
+
+    .token-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
+      padding: 16px 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+    }
+
+    .token-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 14px;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .token-info { flex: 1; }
+
+    .token-name {
+      font-size: 16px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .token-chain-badge {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .token-meta {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    .token-stats {
+      display: flex;
+      gap: 32px;
+      text-align: right;
+    }
+
+    .token-stat-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .token-stat-value {
+      font-size: 18px;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    /* ── INTEGRATION CARDS ── */
+    .integrations-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      gap: 12px;
+    }
+
+    .integration-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 20px;
+      transition: all 0.2s;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .integration-card:hover {
+      border-color: #3d4a73;
+      background: var(--bg-card-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    }
+
+    .integration-card .rank {
+      position: absolute;
+      top: 12px;
+      right: 14px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .integration-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .protocol-logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 13px;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .protocol-info { flex: 1; }
+
+    .protocol-name {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .protocol-type {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+
+    .integration-metrics {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+
+    .metric-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .metric-value {
+      font-size: 16px;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    .metric-value.apy {
+      color: var(--accent-green);
+    }
+
+    .metric-value.tvl {
+      color: var(--accent-cyan);
+    }
+
+    /* Depth/reliability bar */
+    .depth-bar-container {
+      margin-top: 4px;
+    }
+
+    .depth-bar {
+      height: 4px;
+      border-radius: 2px;
+      background: rgba(255,255,255,0.06);
+      overflow: hidden;
+    }
+
+    .depth-bar-fill {
+      height: 100%;
+      border-radius: 2px;
+      transition: width 0.6s ease;
+    }
+
+    .depth-bar-fill.high { background: var(--accent-green); }
+    .depth-bar-fill.medium { background: var(--accent-orange); }
+    .depth-bar-fill.low { background: var(--accent-red); }
+
+    .depth-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    /* ── STRATEGY CTA ── */
+    .integration-card .strategy-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: rgba(139, 92, 246, 0.1);
+      color: var(--accent-purple);
+    }
+
+    /* ── BEST YIELD HIGHLIGHT ── */
+    .integration-card.best-yield {
+      border-color: rgba(16, 185, 129, 0.3);
+    }
+
+    .integration-card.best-yield::after {
+      content: 'Best Yield';
+      position: absolute;
+      top: -1px;
+      left: 20px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--accent-green);
+      background: var(--bg-card);
+      padding: 0 8px;
+      transform: translateY(-50%);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .stats-row { grid-template-columns: repeat(2, 1fr); }
+      .integrations-grid { grid-template-columns: 1fr; }
+      .token-stats { gap: 20px; }
+    }
+
+    @media (max-width: 600px) {
+      .navbar { padding: 12px 16px; }
+      .main { padding: 20px 16px; }
+      .stats-row { grid-template-columns: 1fr; }
+      .hero-title { font-size: 22px; }
+      .token-header { flex-direction: column; align-items: flex-start; }
+      .token-stats { width: 100%; justify-content: space-between; }
+    }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    /* ── ANIMATION ── */
+    .fade-in {
+      animation: fadeIn 0.4s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .footer {
+      text-align: center;
+      padding: 40px 0;
+      color: var(--text-muted);
+      font-size: 12px;
+      border-top: 1px solid var(--border);
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- NAV -->
+    <nav class="navbar">
+      <div class="nav-brand">
+        <div class="nav-logo">M</div>
+        <div class="nav-title">Meta Pool <span>Yield Explorer</span></div>
+        <span class="nav-badge">LIVE</span>
+      </div>
+      <div class="nav-right">
+        <div class="nav-status">
+          <div class="dot"></div>
+          Feeds updated 12s ago
+        </div>
+        <button class="btn-connect">Connect Wallet</button>
+      </div>
+    </nav>
+
+    <main class="main">
+      <!-- HERO -->
+      <section class="hero-section fade-in">
+        <h1 class="hero-title">Where should your LSTs go?</h1>
+        <p class="hero-sub">Live yield opportunities across every chain Meta Pool supports — ranked, scored, and ready to act on.</p>
+
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-label">Total LST TVL</div>
+            <div class="stat-value">$142.8M</div>
+            <div class="stat-change up">↑ 8.3% 30d</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Active Integrations</div>
+            <div class="stat-value">23</div>
+            <div class="stat-change up">↑ 3 new</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Best LST Yield</div>
+            <div class="stat-value" style="color: var(--accent-green)">14.2%</div>
+            <div class="stat-change up">mpETH on Pendle</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Chains Live</div>
+            <div class="stat-value">5</div>
+            <div class="stat-change up">NEAR · ETH · SOL · ICP · Story</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CHAIN FILTER -->
+      <div class="chain-filter fade-in">
+        <button class="chain-tab active" onclick="filterChain('all')">
+          All Chains <span class="chain-count">23</span>
+        </button>
+        <button class="chain-tab" onclick="filterChain('near')">
+          <span class="chain-dot" style="background: var(--near-color)"></span>
+          NEAR <span class="chain-count">8</span>
+        </button>
+        <button class="chain-tab" onclick="filterChain('eth')">
+          <span class="chain-dot" style="background: var(--eth-color)"></span>
+          Ethereum <span class="chain-count">6</span>
+        </button>
+        <button class="chain-tab" onclick="filterChain('sol')">
+          <span class="chain-dot" style="background: var(--sol-color)"></span>
+          Solana <span class="chain-count">4</span>
+        </button>
+        <button class="chain-tab" onclick="filterChain('icp')">
+          <span class="chain-dot" style="background: var(--icp-color)"></span>
+          ICP <span class="chain-count">3</span>
+        </button>
+        <button class="chain-tab" onclick="filterChain('story')">
+          <span class="chain-dot" style="background: var(--story-color)"></span>
+          Story <span class="chain-count">2</span>
+        </button>
+      </div>
+
+      <!-- TOOLBAR -->
+      <div class="toolbar fade-in">
+        <div class="toolbar-left">
+          <div class="toolbar-title">Yield Opportunities</div>
+          <div class="toolbar-count" id="visibleCount">Showing 23 integrations</div>
+        </div>
+        <select class="sort-select" onchange="sortIntegrations(this.value)">
+          <option value="apy">Sort by APY (highest)</option>
+          <option value="tvl">Sort by TVL (deepest)</option>
+          <option value="reliability">Sort by Reliability</option>
+        </select>
+      </div>
+
+      <!-- TOKEN SECTIONS -->
+      <div id="tokenSections"></div>
+
+      <div class="footer">
+        Meta Pool — LST Utility Dashboard · Yields update every 60s · Data sources: on-chain + protocol APIs
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // ── MOCK DATA ──
+    const TOKENS = [
+      {
+        symbol: 'stNEAR',
+        chain: 'near',
+        chainLabel: 'NEAR',
+        color: '#00c08b',
+        gradient: 'linear-gradient(135deg, #00c08b, #00a67d)',
+        baseApy: 5.1,
+        totalStaked: '$48.2M',
+        integrations: [
+          { protocol: 'Ref Finance', type: 'DEX / Farm', apy: 11.8, tvl: 12400000, reliability: 92, logo: 'RF', logoColor: '#00c08b', strategy: 'stNEAR-NEAR LP + farm rewards' },
+          { protocol: 'Burrow', type: 'Lending', apy: 7.4, tvl: 8900000, reliability: 88, logo: 'BW', logoColor: '#6366f1', strategy: 'Supply stNEAR as collateral → borrow USDC' },
+          { protocol: 'Jumbo Exchange', type: 'DEX / Farm', apy: 9.2, tvl: 3200000, reliability: 74, logo: 'JB', logoColor: '#f59e0b', strategy: 'stNEAR-USDT concentrated LP' },
+          { protocol: 'Pembrock', type: 'Leveraged Yield', apy: 13.1, tvl: 1800000, reliability: 62, logo: 'PB', logoColor: '#ef4444', strategy: '2x leveraged stNEAR farming' },
+          { protocol: 'Linear Protocol', type: 'Yield Aggregator', apy: 6.8, tvl: 5600000, reliability: 85, logo: 'LP', logoColor: '#3b82f6', strategy: 'Auto-compound stNEAR yield' },
+          { protocol: 'Orderly Network', type: 'Perp Collateral', apy: 5.1, tvl: 4100000, reliability: 90, logo: 'ON', logoColor: '#8b5cf6', strategy: 'Use stNEAR as margin collateral' },
+          { protocol: 'Spin', type: 'Options Vault', apy: 8.5, tvl: 980000, reliability: 58, logo: 'SP', logoColor: '#ec4899', strategy: 'Covered call vault on stNEAR' },
+          { protocol: 'Bastion', type: 'Lending (Aurora)', apy: 6.2, tvl: 2100000, reliability: 70, logo: 'BS', logoColor: '#06b6d4', strategy: 'Supply on Aurora L2 lending' },
+        ]
+      },
+      {
+        symbol: 'mpETH',
+        chain: 'eth',
+        chainLabel: 'Ethereum',
+        color: '#627eea',
+        gradient: 'linear-gradient(135deg, #627eea, #4f6ed4)',
+        baseApy: 3.8,
+        totalStaked: '$52.1M',
+        integrations: [
+          { protocol: 'Pendle Finance', type: 'Yield Trading', apy: 14.2, tvl: 18500000, reliability: 94, logo: 'PD', logoColor: '#06b6d4', strategy: 'mpETH YT → leveraged yield exposure' },
+          { protocol: 'Aave V3', type: 'Lending', apy: 5.6, tvl: 9800000, reliability: 96, logo: 'AV', logoColor: '#b6509e', strategy: 'Supply mpETH → borrow stablecoins' },
+          { protocol: 'Curve Finance', type: 'DEX / LP', apy: 8.9, tvl: 7200000, reliability: 90, logo: 'CV', logoColor: '#ff6b6b', strategy: 'mpETH-ETH pool + CRV rewards' },
+          { protocol: 'Balancer V2', type: 'DEX / LP', apy: 7.1, tvl: 4300000, reliability: 87, logo: 'BL', logoColor: '#1e1e1e', strategy: 'mpETH-wstETH composable pool' },
+          { protocol: 'Morpho Blue', type: 'Lending', apy: 6.3, tvl: 3100000, reliability: 82, logo: 'MO', logoColor: '#2563eb', strategy: 'Optimized lending rate on mpETH' },
+          { protocol: 'Eigen Layer', type: 'Restaking', apy: 4.1, tvl: 15200000, reliability: 78, logo: 'EL', logoColor: '#7c3aed', strategy: 'Restake mpETH for points + AVS yield' },
+        ]
+      },
+      {
+        symbol: 'mSOL',
+        chain: 'sol',
+        chainLabel: 'Solana',
+        color: '#9945ff',
+        gradient: 'linear-gradient(135deg, #9945ff, #14f195)',
+        baseApy: 6.9,
+        totalStaked: '$28.4M',
+        integrations: [
+          { protocol: 'Kamino Finance', type: 'Lending + LP', apy: 12.5, tvl: 8700000, reliability: 88, logo: 'KM', logoColor: '#14f195', strategy: 'Multiply loop: mSOL supply → SOL borrow → restake' },
+          { protocol: 'Marinade (mSOL-SOL)', type: 'DEX / LP', apy: 9.8, tvl: 6100000, reliability: 91, logo: 'MN', logoColor: '#DC1FFF', strategy: 'mSOL-SOL LP on Orca whirlpool' },
+          { protocol: 'Drift Protocol', type: 'Perp Collateral', apy: 6.9, tvl: 3800000, reliability: 85, logo: 'DR', logoColor: '#ff6b35', strategy: 'Use mSOL as cross-margin collateral' },
+          { protocol: 'Solend', type: 'Lending', apy: 8.1, tvl: 2900000, reliability: 79, logo: 'SL', logoColor: '#6366f1', strategy: 'Supply mSOL → borrow USDC at low rate' },
+        ]
+      },
+      {
+        symbol: 'mpICP',
+        chain: 'icp',
+        chainLabel: 'ICP',
+        color: '#29abe2',
+        gradient: 'linear-gradient(135deg, #29abe2, #1e90d0)',
+        baseApy: 7.2,
+        totalStaked: '$9.8M',
+        integrations: [
+          { protocol: 'ICPSwap', type: 'DEX / Farm', apy: 10.4, tvl: 2800000, reliability: 72, logo: 'IS', logoColor: '#29abe2', strategy: 'mpICP-ICP farm with swap fee yield' },
+          { protocol: 'Sonic DEX', type: 'DEX / LP', apy: 8.9, tvl: 1900000, reliability: 68, logo: 'SN', logoColor: '#ff4757', strategy: 'Concentrated LP mpICP-ckUSDT' },
+          { protocol: 'Helix Markets', type: 'Lending', apy: 6.5, tvl: 1200000, reliability: 60, logo: 'HX', logoColor: '#ffa502', strategy: 'Supply mpICP as lending collateral' },
+        ]
+      },
+      {
+        symbol: 'mpSTORY',
+        chain: 'story',
+        chainLabel: 'Story Protocol',
+        color: '#ff6b6b',
+        gradient: 'linear-gradient(135deg, #ff6b6b, #ee5a24)',
+        baseApy: 8.5,
+        totalStaked: '$4.3M',
+        integrations: [
+          { protocol: 'Story Swap', type: 'DEX / Farm', apy: 15.8, tvl: 980000, reliability: 55, logo: 'SS', logoColor: '#ff6b6b', strategy: 'Early LP incentives — mpSTORY-IP pool' },
+          { protocol: 'IP-Fi Lending', type: 'Lending', apy: 9.2, tvl: 620000, reliability: 48, logo: 'IF', logoColor: '#ffc048', strategy: 'Supply mpSTORY → borrow against IP assets' },
+        ]
+      }
+    ];
+
+    let currentChain = 'all';
+    let currentSort = 'apy';
+
+    function filterChain(chain) {
+      currentChain = chain;
+      document.querySelectorAll('.chain-tab').forEach(tab => tab.classList.remove('active'));
+      event.target.closest('.chain-tab').classList.add('active');
+      render();
+    }
+
+    function sortIntegrations(sort) {
+      currentSort = sort;
+      render();
+    }
+
+    function formatTvl(n) {
+      if (n >= 1e6) return '$' + (n / 1e6).toFixed(1) + 'M';
+      if (n >= 1e3) return '$' + (n / 1e3).toFixed(0) + 'K';
+      return '$' + n;
+    }
+
+    function reliabilityClass(r) {
+      if (r >= 80) return 'high';
+      if (r >= 60) return 'medium';
+      return 'low';
+    }
+
+    function reliabilityLabel(r) {
+      if (r >= 80) return 'High liquidity depth';
+      if (r >= 60) return 'Moderate depth';
+      return 'Low depth — check slippage';
+    }
+
+    function render() {
+      const container = document.getElementById('tokenSections');
+      container.innerHTML = '';
+      let totalIntegrations = 0;
+
+      const filtered = currentChain === 'all'
+        ? TOKENS
+        : TOKENS.filter(t => t.chain === currentChain);
+
+      filtered.forEach(token => {
+        const sorted = [...token.integrations].sort((a, b) => {
+          if (currentSort === 'apy') return b.apy - a.apy;
+          if (currentSort === 'tvl') return b.tvl - a.tvl;
+          return b.reliability - a.reliability;
+        });
+
+        totalIntegrations += sorted.length;
+        const bestApy = Math.max(...sorted.map(i => i.apy));
+
+        const section = document.createElement('div');
+        section.className = 'token-section fade-in';
+
+        const chainBadgeStyle = `background: ${token.color}20; color: ${token.color};`;
+
+        section.innerHTML = `
+          <div class="token-header">
+            <div class="token-icon" style="background: ${token.gradient}">${token.symbol.slice(0, 2)}</div>
+            <div class="token-info">
+              <div class="token-name">
+                ${token.symbol}
+                <span class="token-chain-badge" style="${chainBadgeStyle}">${token.chainLabel}</span>
+              </div>
+              <div class="token-meta">Base staking yield: ${token.baseApy}% · ${sorted.length} active integrations</div>
+            </div>
+            <div class="token-stats">
+              <div>
+                <div class="token-stat-label">Staked</div>
+                <div class="token-stat-value">${token.totalStaked}</div>
+              </div>
+              <div>
+                <div class="token-stat-label">Best DeFi Yield</div>
+                <div class="token-stat-value" style="color: var(--accent-green)">${bestApy}%</div>
+              </div>
+            </div>
+          </div>
+          <div class="integrations-grid">
+            ${sorted.map((integ, idx) => `
+              <div class="integration-card ${integ.apy === bestApy ? 'best-yield' : ''}">
+                <span class="rank">#${idx + 1}</span>
+                <div class="integration-top">
+                  <div class="protocol-logo" style="background: ${integ.logoColor}">${integ.logo}</div>
+                  <div class="protocol-info">
+                    <div class="protocol-name">${integ.protocol}</div>
+                    <div class="protocol-type">${integ.type}</div>
+                  </div>
+                </div>
+                <div class="integration-metrics">
+                  <div>
+                    <div class="metric-label">Total APY</div>
+                    <div class="metric-value apy">${integ.apy}%</div>
+                  </div>
+                  <div>
+                    <div class="metric-label">TVL</div>
+                    <div class="metric-value tvl">${formatTvl(integ.tvl)}</div>
+                  </div>
+                  <div>
+                    <div class="metric-label">Reliability</div>
+                    <div class="depth-bar-container">
+                      <div class="depth-bar">
+                        <div class="depth-bar-fill ${reliabilityClass(integ.reliability)}" style="width: ${integ.reliability}%"></div>
+                      </div>
+                      <div class="depth-label">${reliabilityLabel(integ.reliability)}</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="strategy-tag">⚡ ${integ.strategy}</div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+
+        container.appendChild(section);
+      });
+
+      document.getElementById('visibleCount').textContent = `Showing ${totalIntegrations} integrations`;
+    }
+
+    // Initial render
+    render();
+  </script>
+</body>
+</html>

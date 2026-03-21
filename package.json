@@ -1,0 +1,8 @@
+{
+  "name": "lst-yield-dashboard",
+  "version": "1.0.0",
+  "description": "Live LST Utility Dashboard for Meta Pool — yield opportunities across NEAR, ETH, SOL, ICP, and Story Protocol",
+  "scripts": {
+    "start": "npx serve -s . -l $PORT"
+  }
+}
