@@ -2,7 +2,29 @@
   "name": "lst-yield-dashboard",
   "version": "1.0.0",
   "description": "Live LST Utility Dashboard for Meta Pool — yield opportunities across NEAR, ETH, SOL, ICP, and Story Protocol",
+  "author": "lucascbacasp",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lucascbacasp/lst-yield-dashboard.git"
+  },
+  "homepage": "https://github.com/lucascbacasp/lst-yield-dashboard",
+  "keywords": [
+    "meta-pool",
+    "liquid-staking",
+    "lst",
+    "defi",
+    "yield",
+    "dashboard",
+    "near",
+    "ethereum",
+    "solana"
+  ],
   "scripts": {
-    "start": "npx serve -s . -l $PORT"
+    "start": "npx serve -s . -l $PORT",
+    "dev": "npx serve -s . -l 3000"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
