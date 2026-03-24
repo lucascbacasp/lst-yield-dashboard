@@ -47,11 +47,13 @@ This turns passive documentation into an active **retention tool** — the staki
 
 | Token | Chain | Base APY | Active Integrations |
 |-------|-------|----------|---------------------|
-| stNEAR | NEAR | 5.1% | 8 (Ref Finance, Burrow, Jumbo, Pembrock, ...) |
-| mpETH | Ethereum | 3.8% | 6 (Pendle, Aave V3, Curve, Balancer, ...) |
-| mSOL | Solana | 6.9% | 4 (Kamino, Marinade, Drift, Solend) |
-| mpICP | ICP | 7.2% | 3 (ICPSwap, Sonic, Helix) |
-| mpSTORY | Story Protocol | 8.5% | 2 (Story Swap, IP-Fi Lending) |
+| stNEAR | NEAR | 5.1% | 8 (Ref Finance, Burrow, Jumbo, Pembrock, Trisolaris, Bastion, Aurigami, WannaSwap) |
+| spETH | Ethereum | 3.8% | 5 (QiDAO, Lynex, Velodrome, TENET, Linea) |
+| mpSOL | Solana | 10.2% | 2 (Jupiter, Coinstore Web3) |
+| stICP | ICP | 7.2% | 3 (ICPSwap, Sonic, Helix) |
+| stIP | Story Protocol | 8.5% | 2 (Story Swap, IP-Fi Lending) |
+
+> **Note:** mpETH was rebranded to **spETH** (Staking Pool ETH). mSOL is Marinade Finance's token — Meta Pool's Solana LST is **mpSOL**. ICP and Story tokens use **stICP** and **stIP** naming.
 
 ---
 
