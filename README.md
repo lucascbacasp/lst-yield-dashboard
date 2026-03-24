@@ -45,15 +45,15 @@ This turns passive documentation into an active **retention tool** — the staki
 
 ## Supported Tokens & Chains
 
-| Token | Chain | Base APY | Active Integrations |
-|-------|-------|----------|---------------------|
-| stNEAR | NEAR | 5.1% | 8 (Ref Finance, Burrow, Jumbo, Pembrock, Trisolaris, Bastion, Aurigami, WannaSwap) |
-| spETH | Ethereum | 3.8% | 5 (QiDAO, Lynex, Velodrome, TENET, Linea) |
-| mpSOL | Solana | 10.2% | 2 (Jupiter, Coinstore Web3) |
-| stICP | ICP | 7.2% | 3 (ICPSwap, Sonic, Helix) |
-| stIP | Story Protocol | 8.5% | 2 (Story Swap, IP-Fi Lending) |
+| Token | Chain | Base APY | Status | Integrations |
+|-------|-------|----------|--------|--------------|
+| stNEAR | NEAR | 5.1% | ✅ Live | 1 — RHEA Finance (ex Ref + Burrow) |
+| spETH | Ethereum | 3.8% | 🔄 Rebuilding | 2 coming soon — Lynex, QiDAO |
+| mpSOL | Solana | 10.2% | ✅ Live | 2 — Jupiter, Sanctum |
+| stICP | ICP | 7.2% | 🔄 Planned | 2 coming soon — ICPSwap, Sonic |
+| stIP | Story Protocol | 8.5% | ✅ Live | 1 — Meta Pool Staking |
 
-> **Note:** mpETH was rebranded to **spETH** (Staking Pool ETH). mSOL is Marinade Finance's token — Meta Pool's Solana LST is **mpSOL**. ICP and Story tokens use **stICP** and **stIP** naming.
+> **Note:** mpETH was rebranded to **spETH** after the June 2025 exploit. Previous mpETH DeFi integrations are being restored for spETH. stICP and stIP DeFi integrations are planned but not yet live — staking works on Meta Pool directly.
 
 ---
 

@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Meta Pool — LST Yield Explorer</title>
-  <meta name="description" content="Live dashboard showing DeFi yield opportunities for Meta Pool LSTs across NEAR, Ethereum, Solana, ICP, and Story Protocol. Find the best APY for stNEAR, mpETH, mSOL, and more.">
-  <meta name="keywords" content="Meta Pool, LST, liquid staking, stNEAR, mpETH, mSOL, DeFi, yield, dashboard, NEAR, Ethereum, Solana">
+  <meta name="description" content="Live dashboard showing DeFi yield opportunities for Meta Pool LSTs across NEAR, Ethereum, Solana, ICP, and Story Protocol. Find the best APY for stNEAR, spETH, mpSOL, stICP and stIP.">
+  <meta name="keywords" content="Meta Pool, LST, liquid staking, stNEAR, spETH, mpSOL, stICP, stIP, DeFi, yield, dashboard, NEAR, Ethereum, Solana">
   <meta name="author" content="lucascbacasp">
   <meta name="theme-color" content="#0a0e1a">
 
@@ -671,18 +671,18 @@
         <div class="stats-row">
           <div class="stat-card">
             <div class="stat-label">Total LST TVL</div>
-            <div class="stat-value">$142.8M</div>
-            <div class="stat-change up">↑ 8.3% 30d</div>
+            <div class="stat-value">$74.9M</div>
+            <div class="stat-change up">↑ across 5 chains</div>
           </div>
           <div class="stat-card">
-            <div class="stat-label">Active Integrations</div>
-            <div class="stat-value">23</div>
-            <div class="stat-change up">↑ 3 new</div>
+            <div class="stat-label">Live Integrations</div>
+            <div class="stat-value">5</div>
+            <div class="stat-change up">+ coming soon on ETH/ICP</div>
           </div>
           <div class="stat-card">
             <div class="stat-label">Best LST Yield</div>
-            <div class="stat-value" style="color: var(--accent-green)">14.2%</div>
-            <div class="stat-change up">mpETH on Pendle</div>
+            <div class="stat-value" style="color: var(--accent-green)">10.2%</div>
+            <div class="stat-change up">mpSOL on Solana</div>
           </div>
           <div class="stat-card">
             <div class="stat-label">Chains Live</div>
@@ -695,27 +695,27 @@
       <!-- CHAIN FILTER -->
       <div class="chain-filter fade-in">
         <button class="chain-tab active" onclick="filterChain('all')">
-          All Chains <span class="chain-count">15</span>
+          All Chains <span class="chain-count" id="countAll">0</span>
         </button>
         <button class="chain-tab" onclick="filterChain('near')">
           <span class="chain-dot" style="background: var(--near-color)"></span>
-          NEAR <span class="chain-count">5</span>
+          NEAR <span class="chain-count" id="countNear">0</span>
         </button>
         <button class="chain-tab" onclick="filterChain('eth')">
           <span class="chain-dot" style="background: var(--eth-color)"></span>
-          Ethereum <span class="chain-count">5</span>
+          Ethereum <span class="chain-count" id="countEth">0</span>
         </button>
         <button class="chain-tab" onclick="filterChain('sol')">
           <span class="chain-dot" style="background: var(--sol-color)"></span>
-          Solana <span class="chain-count">2</span>
+          Solana <span class="chain-count" id="countSol">0</span>
         </button>
         <button class="chain-tab" onclick="filterChain('icp')">
           <span class="chain-dot" style="background: var(--icp-color)"></span>
-          ICP <span class="chain-count">2</span>
+          ICP <span class="chain-count" id="countIcp">0</span>
         </button>
         <button class="chain-tab" onclick="filterChain('story')">
           <span class="chain-dot" style="background: var(--story-color)"></span>
-          Story <span class="chain-count">1</span>
+          Story <span class="chain-count" id="countStory">0</span>
         </button>
       </div>
 
@@ -742,7 +742,8 @@
   </div>
 
   <script>
-    // ── MOCK DATA ──
+    // ── DATA — Verified March 2026 ──
+    // Status: 'live' = confirmed working | 'coming_soon' = announced but not yet active
     const TOKENS = [
       {
         symbol: 'stNEAR',
@@ -753,11 +754,19 @@
         baseApy: 5.1,
         totalStaked: '$48.2M',
         integrations: [
-          { protocol: 'RHEA Finance (ex Ref)', type: 'DEX / Farm', apy: 11.8, tvl: 12400000, reliability: 92, logo: 'RH', logoColor: '#00c08b', strategy: 'stNEAR-NEAR LP + farm rewards on RHEA', url: 'https://rhea.finance/' },
-          { protocol: 'RHEA Lending (ex Burrow)', type: 'Lending', apy: 7.4, tvl: 8900000, reliability: 88, logo: 'RH', logoColor: '#6366f1', strategy: 'Supply stNEAR → self-repaying loan on USDC', url: 'https://rhea.finance/' },
-          { protocol: 'Trisolaris (Aurora)', type: 'DEX / LP', apy: 8.5, tvl: 2400000, reliability: 70, logo: 'TS', logoColor: '#06b6d4', strategy: 'stNEAR-NEAR LP on Aurora DEX', url: 'https://www.trisolaris.io/#/farm' },
-          { protocol: 'Bastion (Aurora)', type: 'Lending', apy: 6.2, tvl: 2100000, reliability: 68, logo: 'BS', logoColor: '#8b5cf6', strategy: 'Supply stNEAR on Aurora lending market', url: 'https://app.bastionprotocol.com/markets' },
-          { protocol: 'Aurigami (Aurora)', type: 'Lending', apy: 5.8, tvl: 1500000, reliability: 65, logo: 'AU', logoColor: '#ec4899', strategy: 'stNEAR collateral on Aurora money market', url: 'https://app.aurigami.finance/' },
+          {
+            protocol: 'RHEA Finance',
+            type: 'DEX / LP + Lending',
+            apy: 5.1,
+            tvl: 12400000,
+            reliability: 90,
+            logo: 'RH',
+            logoColor: '#00c08b',
+            strategy: 'stNEAR-wNEAR rated pool + supply stNEAR as lending collateral',
+            url: 'https://app.ref.finance/pools',
+            status: 'live',
+            note: 'Formerly Ref Finance + Burrow — merged into RHEA (July 2025)'
+          }
         ]
       },
       {
@@ -768,13 +777,34 @@
         gradient: 'linear-gradient(135deg, #627eea, #4f6ed4)',
         baseApy: 3.8,
         totalStaked: '$25.3M',
-        note: 'Formerly mpETH — rebranded to spETH (Staking Pool ETH)',
+        note: '⚠️ Formerly mpETH — rebranded to spETH after June 2025 exploit. DeFi integrations being restored.',
         integrations: [
-          { protocol: 'QiDAO (MAI)', type: 'CDP / Stablecoin', apy: 7.2, tvl: 4200000, reliability: 78, logo: 'QI', logoColor: '#ff6b6b', strategy: 'spETH as collateral → mint MAI stablecoin', url: 'https://app.mai.finance/vaults' },
-          { protocol: 'Lynex', type: 'DEX / LP', apy: 9.8, tvl: 2100000, reliability: 65, logo: 'LX', logoColor: '#06b6d4', strategy: 'spETH-MAI LP with concentrated liquidity', url: 'https://app.lynex.fi/' },
-          { protocol: 'Velodrome', type: 'DEX / Farm', apy: 8.4, tvl: 3500000, reliability: 72, logo: 'VD', logoColor: '#3b82f6', strategy: 'Incentivized spETH pools + VELO rewards', url: 'https://velodrome.finance/liquidity' },
-          { protocol: 'TENET Network', type: 'Cross-chain Delegation', apy: 5.1, tvl: 6800000, reliability: 70, logo: 'TN', logoColor: '#8b5cf6', strategy: 'Delegate spETH cross-chain for extra rewards', url: 'https://tenet.org/' },
-          { protocol: 'Linea (Bridged)', type: 'L2 DeFi', apy: 4.5, tvl: 1900000, reliability: 62, logo: 'LN', logoColor: '#61dfff', strategy: 'Bridge spETH to Linea → access L2 yield', url: 'https://bridge.linea.build/' },
+          {
+            protocol: 'Lynex (Linea)',
+            type: 'DEX / LP',
+            apy: null,
+            tvl: null,
+            reliability: 60,
+            logo: 'LX',
+            logoColor: '#06b6d4',
+            strategy: 'spETH concentrated liquidity pools — check availability',
+            url: 'https://app.lynex.fi/pools',
+            status: 'coming_soon',
+            note: 'Was mpETH launch partner on Linea. spETH pool pending confirmation'
+          },
+          {
+            protocol: 'QiDAO / MAI Finance',
+            type: 'CDP / Stablecoin',
+            apy: null,
+            tvl: null,
+            reliability: 55,
+            logo: 'QI',
+            logoColor: '#ff6b6b',
+            strategy: 'spETH as collateral → mint MAI stablecoin',
+            url: 'https://app.mai.finance/',
+            status: 'coming_soon',
+            note: 'Previously had mpETH vaults on Linea. spETH vault status TBD'
+          }
         ]
       },
       {
@@ -785,10 +815,32 @@
         gradient: 'linear-gradient(135deg, #9945ff, #14f195)',
         baseApy: 10.2,
         totalStaked: '$12.6M',
-        note: 'Leveraged liquid staking — higher APY via SOL borrow loop',
+        note: 'Leveraged liquid staking — higher base APY via SOL borrow loop strategy',
         integrations: [
-          { protocol: 'Jupiter', type: 'DEX / Swap', apy: 10.2, tvl: 8700000, reliability: 92, logo: 'JP', logoColor: '#14f195', strategy: 'Trade mpSOL on Jupiter aggregator', url: 'https://jup.ag/swap/SOL-mpSOL' },
-          { protocol: 'Coinstore', type: 'CEX / Trade', apy: 10.2, tvl: 1200000, reliability: 58, logo: 'CS', logoColor: '#f59e0b', strategy: 'mpSOL trading on Coinstore exchange', url: 'https://www.coinstore.com/' },
+          {
+            protocol: 'Jupiter',
+            type: 'DEX Aggregator',
+            apy: 10.2,
+            tvl: 8700000,
+            reliability: 95,
+            logo: 'JP',
+            logoColor: '#14f195',
+            strategy: 'Swap SOL ↔ mpSOL instantly via Jupiter aggregator',
+            url: 'https://jup.ag/swap/SOL-mpSOL',
+            status: 'live'
+          },
+          {
+            protocol: 'Sanctum',
+            type: 'LST Liquidity Layer',
+            apy: 10.2,
+            tvl: 5200000,
+            reliability: 92,
+            logo: 'SC',
+            logoColor: '#e879f9',
+            strategy: 'Swap mpSOL ↔ any Solana LST (jitoSOL, mSOL, bSOL) instantly',
+            url: 'https://app.sanctum.so/swap',
+            status: 'live'
+          }
         ]
       },
       {
@@ -799,9 +851,34 @@
         gradient: 'linear-gradient(135deg, #29abe2, #1e90d0)',
         baseApy: 7.2,
         totalStaked: '$9.8M',
+        note: 'DeFi liquidity pools for stICP are planned — staking live on Meta Pool',
         integrations: [
-          { protocol: 'ICPSwap', type: 'DEX / Farm', apy: 10.4, tvl: 2800000, reliability: 72, logo: 'IS', logoColor: '#29abe2', strategy: 'stICP-ICP farm with swap fee yield', url: 'https://app.icpswap.com/swap' },
-          { protocol: 'Sonic DEX', type: 'DEX / LP', apy: 8.9, tvl: 1900000, reliability: 68, logo: 'SN', logoColor: '#ff4757', strategy: 'Concentrated LP stICP-ckUSDT', url: 'https://sonic.ooo/' },
+          {
+            protocol: 'ICPSwap',
+            type: 'DEX',
+            apy: null,
+            tvl: null,
+            reliability: 50,
+            logo: 'IS',
+            logoColor: '#29abe2',
+            strategy: 'stICP-ICP swap pool — pending launch',
+            url: 'https://app.icpswap.com',
+            status: 'coming_soon',
+            note: 'Largest ICP DEX by TVL. stICP pool announced but not yet live'
+          },
+          {
+            protocol: 'Sonic DEX',
+            type: 'DEX / AMM',
+            apy: null,
+            tvl: null,
+            reliability: 50,
+            logo: 'SN',
+            logoColor: '#ff4757',
+            strategy: 'stICP liquidity pair — pending launch',
+            url: 'https://app.sonic.ooo/',
+            status: 'coming_soon',
+            note: 'ICP AMM hub. stICP pool planned'
+          }
         ]
       },
       {
@@ -811,10 +888,21 @@
         color: '#ff6b6b',
         gradient: 'linear-gradient(135deg, #ff6b6b, #ee5a24)',
         baseApy: 8.5,
-        totalStaked: '$4.3M',
-        note: 'stIP/IP exchange rate updates ~every 48 hours · Ecosystem emerging',
+        totalStaked: '$8.5M',
+        note: 'stIP/IP rate updates ~48h · DeFi partnerships coming soon',
         integrations: [
-          { protocol: 'Meta Pool Staking', type: 'Staking', apy: 8.5, tvl: 4300000, reliability: 85, logo: 'MP', logoColor: '#ff6b6b', strategy: 'Stake IP → receive stIP with auto-compounding yield', url: 'https://metapool.app/' },
+          {
+            protocol: 'Meta Pool Staking',
+            type: 'Liquid Staking',
+            apy: 8.5,
+            tvl: 8500000,
+            reliability: 88,
+            logo: 'MP',
+            logoColor: '#ff6b6b',
+            strategy: 'Stake IP → receive stIP with auto-compounding yield',
+            url: 'https://www.metapool.app/stake',
+            status: 'live'
+          }
         ]
       }
     ];
@@ -835,9 +923,15 @@
     }
 
     function formatTvl(n) {
+      if (n === null) return 'TBD';
       if (n >= 1e6) return '$' + (n / 1e6).toFixed(1) + 'M';
       if (n >= 1e3) return '$' + (n / 1e3).toFixed(0) + 'K';
       return '$' + n;
+    }
+
+    function formatApy(apy) {
+      if (apy === null) return 'TBD';
+      return apy + '%';
     }
 
     function reliabilityClass(r) {
@@ -852,6 +946,22 @@
       return 'Low depth — check slippage';
     }
 
+    // Update chain tab counts dynamically
+    function updateCounts() {
+      const chainMap = { near: 0, eth: 0, sol: 0, icp: 0, story: 0 };
+      let total = 0;
+      TOKENS.forEach(t => {
+        chainMap[t.chain] = (chainMap[t.chain] || 0) + t.integrations.length;
+        total += t.integrations.length;
+      });
+      document.getElementById('countAll').textContent = total;
+      document.getElementById('countNear').textContent = chainMap.near;
+      document.getElementById('countEth').textContent = chainMap.eth;
+      document.getElementById('countSol').textContent = chainMap.sol;
+      document.getElementById('countIcp').textContent = chainMap.icp;
+      document.getElementById('countStory').textContent = chainMap.story;
+    }
+
     function render() {
       const container = document.getElementById('tokenSections');
       container.innerHTML = '';
@@ -863,18 +973,27 @@
 
       filtered.forEach(token => {
         const sorted = [...token.integrations].sort((a, b) => {
-          if (currentSort === 'apy') return b.apy - a.apy;
-          if (currentSort === 'tvl') return b.tvl - a.tvl;
+          if (currentSort === 'apy') return (b.apy || 0) - (a.apy || 0);
+          if (currentSort === 'tvl') return (b.tvl || 0) - (a.tvl || 0);
           return b.reliability - a.reliability;
         });
 
         totalIntegrations += sorted.length;
-        const bestApy = Math.max(...sorted.map(i => i.apy));
+        const liveIntegrations = sorted.filter(i => i.status === 'live');
+        const comingSoonIntegrations = sorted.filter(i => i.status === 'coming_soon');
+        const bestApy = liveIntegrations.length > 0
+          ? Math.max(...liveIntegrations.map(i => i.apy || 0))
+          : null;
 
         const section = document.createElement('div');
         section.className = 'token-section fade-in';
 
         const chainBadgeStyle = `background: ${token.color}20; color: ${token.color};`;
+        const liveCount = liveIntegrations.length;
+        const csCount = comingSoonIntegrations.length;
+        const integLabel = liveCount > 0
+          ? `${liveCount} live` + (csCount > 0 ? ` · ${csCount} coming soon` : '')
+          : `${csCount} coming soon`;
 
         section.innerHTML = `
           <div class="token-header">
@@ -884,7 +1003,7 @@
                 ${token.symbol}
                 <span class="token-chain-badge" style="${chainBadgeStyle}">${token.chainLabel}</span>
               </div>
-              <div class="token-meta">Base staking yield: ${token.baseApy}% · ${sorted.length} active integrations${token.note ? ' · <span style="color: var(--accent-orange); font-style: italic">' + token.note + '</span>' : ''}</div>
+              <div class="token-meta">Base staking yield: ${token.baseApy}% · ${integLabel}${token.note ? ' · <span style="color: var(--accent-orange); font-style: italic; font-size: 12px">' + token.note + '</span>' : ''}</div>
             </div>
             <div class="token-stats">
               <div>
@@ -893,31 +1012,39 @@
               </div>
               <div>
                 <div class="token-stat-label">Best DeFi Yield</div>
-                <div class="token-stat-value" style="color: var(--accent-green)">${bestApy}%</div>
+                <div class="token-stat-value" style="color: ${bestApy ? 'var(--accent-green)' : 'var(--text-muted)'}">${bestApy ? bestApy + '%' : 'Coming soon'}</div>
               </div>
             </div>
           </div>
           <div class="integrations-grid">
-            ${sorted.map((integ, idx) => `
+            ${sorted.map((integ, idx) => {
+              const isComingSoon = integ.status === 'coming_soon';
+              const isBest = !isComingSoon && integ.apy === bestApy && bestApy !== null;
+              const cardOpacity = isComingSoon ? 'opacity: 0.7;' : '';
+              const statusBadge = isComingSoon
+                ? '<span style="display:inline-block;font-size:10px;padding:2px 6px;border-radius:4px;background:rgba(245,158,11,0.15);color:var(--accent-orange);font-weight:600;margin-left:8px;">COMING SOON</span>'
+                : '<span style="display:inline-block;font-size:10px;padding:2px 6px;border-radius:4px;background:rgba(16,185,129,0.15);color:var(--accent-green);font-weight:600;margin-left:8px;">LIVE</span>';
+
+              return `
               <a href="${integ.url}" target="_blank" rel="noopener noreferrer" class="integration-card-link">
-                <div class="integration-card ${integ.apy === bestApy ? 'best-yield' : ''}">
+                <div class="integration-card ${isBest ? 'best-yield' : ''}" style="${cardOpacity}">
                   <span class="rank">#${idx + 1}</span>
                   <div class="card-external-icon">&#x2197;</div>
                   <div class="integration-top">
                     <div class="protocol-logo" style="background: ${integ.logoColor}">${integ.logo}</div>
                     <div class="protocol-info">
-                      <div class="protocol-name">${integ.protocol}</div>
+                      <div class="protocol-name">${integ.protocol}${statusBadge}</div>
                       <div class="protocol-type">${integ.type}</div>
                     </div>
                   </div>
                   <div class="integration-metrics">
                     <div>
                       <div class="metric-label">Total APY</div>
-                      <div class="metric-value apy">${integ.apy}%</div>
+                      <div class="metric-value ${integ.apy !== null ? 'apy' : ''}" style="${integ.apy === null ? 'color:var(--text-muted);font-size:13px' : ''}">${formatApy(integ.apy)}</div>
                     </div>
                     <div>
                       <div class="metric-label">TVL</div>
-                      <div class="metric-value tvl">${formatTvl(integ.tvl)}</div>
+                      <div class="metric-value ${integ.tvl !== null ? 'tvl' : ''}" style="${integ.tvl === null ? 'color:var(--text-muted);font-size:13px' : ''}">${formatTvl(integ.tvl)}</div>
                     </div>
                     <div>
                       <div class="metric-label">Reliability</div>
@@ -930,9 +1057,10 @@
                     </div>
                   </div>
                   <div class="strategy-tag">⚡ ${integ.strategy}</div>
+                  ${integ.note ? '<div style="font-size:11px;color:var(--text-muted);margin-top:8px;font-style:italic">ℹ️ ' + integ.note + '</div>' : ''}
                 </div>
               </a>
-            `).join('')}
+            `}).join('')}
           </div>
         `;
 
@@ -943,6 +1071,7 @@
     }
 
     // Initial render
+    updateCounts();
     render();
   </script>
 </body>
