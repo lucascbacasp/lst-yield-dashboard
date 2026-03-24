@@ -432,6 +432,12 @@
       gap: 12px;
     }
 
+    .integration-card-link {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
     .integration-card {
       background: var(--bg-card);
       border: 1px solid var(--border);
@@ -440,6 +446,21 @@
       transition: all 0.2s;
       cursor: pointer;
       position: relative;
+    }
+
+    .card-external-icon {
+      position: absolute;
+      top: 14px;
+      right: 40px;
+      font-size: 14px;
+      color: var(--text-muted);
+      opacity: 0;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .integration-card:hover .card-external-icon {
+      opacity: 1;
+      transform: translate(2px, -2px);
     }
 
     .integration-card:hover {
@@ -732,14 +753,14 @@
         baseApy: 5.1,
         totalStaked: '$48.2M',
         integrations: [
-          { protocol: 'Ref Finance', type: 'DEX / Farm', apy: 11.8, tvl: 12400000, reliability: 92, logo: 'RF', logoColor: '#00c08b', strategy: 'stNEAR-NEAR LP + farm rewards' },
-          { protocol: 'Burrow', type: 'Lending', apy: 7.4, tvl: 8900000, reliability: 88, logo: 'BW', logoColor: '#6366f1', strategy: 'Supply stNEAR → self-repaying loan on USDC' },
-          { protocol: 'Jumbo Exchange', type: 'DEX / Farm', apy: 9.2, tvl: 3200000, reliability: 74, logo: 'JB', logoColor: '#f59e0b', strategy: 'stNEAR-USDT concentrated LP' },
-          { protocol: 'Pembrock Finance', type: 'Leveraged Yield', apy: 13.1, tvl: 1800000, reliability: 62, logo: 'PB', logoColor: '#ef4444', strategy: '2x leveraged stNEAR farming via Meta Yield' },
-          { protocol: 'Trisolaris (Aurora)', type: 'DEX / LP', apy: 8.5, tvl: 2400000, reliability: 70, logo: 'TS', logoColor: '#06b6d4', strategy: 'stNEAR-NEAR LP on Aurora DEX' },
-          { protocol: 'Bastion (Aurora)', type: 'Lending', apy: 6.2, tvl: 2100000, reliability: 68, logo: 'BS', logoColor: '#8b5cf6', strategy: 'Supply stNEAR on Aurora lending market' },
-          { protocol: 'Aurigami (Aurora)', type: 'Lending', apy: 5.8, tvl: 1500000, reliability: 65, logo: 'AU', logoColor: '#ec4899', strategy: 'stNEAR collateral on Aurora money market' },
-          { protocol: 'WannaSwap (Aurora)', type: 'DEX / Farm', apy: 7.6, tvl: 1200000, reliability: 60, logo: 'WS', logoColor: '#3b82f6', strategy: 'stNEAR-NEAR farm on Aurora AMM' },
+          { protocol: 'Ref Finance', type: 'DEX / Farm', apy: 11.8, tvl: 12400000, reliability: 92, logo: 'RF', logoColor: '#00c08b', strategy: 'stNEAR-NEAR LP + farm rewards', url: 'https://app.ref.finance/farms' },
+          { protocol: 'Burrow', type: 'Lending', apy: 7.4, tvl: 8900000, reliability: 88, logo: 'BW', logoColor: '#6366f1', strategy: 'Supply stNEAR → self-repaying loan on USDC', url: 'https://app.burrow.finance/supply' },
+          { protocol: 'Jumbo Exchange', type: 'DEX / Farm', apy: 9.2, tvl: 3200000, reliability: 74, logo: 'JB', logoColor: '#f59e0b', strategy: 'stNEAR-USDT concentrated LP', url: 'https://app.jumbo.exchange/pool' },
+          { protocol: 'Pembrock Finance', type: 'Leveraged Yield', apy: 13.1, tvl: 1800000, reliability: 62, logo: 'PB', logoColor: '#ef4444', strategy: '2x leveraged stNEAR farming via Meta Yield', url: 'https://app.pembrock.finance/farm' },
+          { protocol: 'Trisolaris (Aurora)', type: 'DEX / LP', apy: 8.5, tvl: 2400000, reliability: 70, logo: 'TS', logoColor: '#06b6d4', strategy: 'stNEAR-NEAR LP on Aurora DEX', url: 'https://www.trisolaris.io/#/farm' },
+          { protocol: 'Bastion (Aurora)', type: 'Lending', apy: 6.2, tvl: 2100000, reliability: 68, logo: 'BS', logoColor: '#8b5cf6', strategy: 'Supply stNEAR on Aurora lending market', url: 'https://app.bastionprotocol.com/markets' },
+          { protocol: 'Aurigami (Aurora)', type: 'Lending', apy: 5.8, tvl: 1500000, reliability: 65, logo: 'AU', logoColor: '#ec4899', strategy: 'stNEAR collateral on Aurora money market', url: 'https://app.aurigami.finance/markets' },
+          { protocol: 'WannaSwap (Aurora)', type: 'DEX / Farm', apy: 7.6, tvl: 1200000, reliability: 60, logo: 'WS', logoColor: '#3b82f6', strategy: 'stNEAR-NEAR farm on Aurora AMM', url: 'https://wannaswap.finance/farm' },
         ]
       },
       {
@@ -752,11 +773,11 @@
         totalStaked: '$25.3M',
         note: 'Formerly mpETH — rebranded to spETH (Staking Pool ETH)',
         integrations: [
-          { protocol: 'QiDAO (MAI)', type: 'CDP / Stablecoin', apy: 7.2, tvl: 4200000, reliability: 78, logo: 'QI', logoColor: '#ff6b6b', strategy: 'spETH as collateral → mint MAI stablecoin' },
-          { protocol: 'Lynex', type: 'DEX / LP', apy: 9.8, tvl: 2100000, reliability: 65, logo: 'LX', logoColor: '#06b6d4', strategy: 'spETH-MAI LP with concentrated liquidity' },
-          { protocol: 'Velodrome', type: 'DEX / Farm', apy: 8.4, tvl: 3500000, reliability: 72, logo: 'VD', logoColor: '#3b82f6', strategy: 'Incentivized spETH pools + VELO rewards' },
-          { protocol: 'TENET Network', type: 'Cross-chain Delegation', apy: 5.1, tvl: 6800000, reliability: 70, logo: 'TN', logoColor: '#8b5cf6', strategy: 'Delegate spETH cross-chain for extra rewards' },
-          { protocol: 'Linea (Bridged)', type: 'L2 DeFi', apy: 4.5, tvl: 1900000, reliability: 62, logo: 'LN', logoColor: '#61dfff', strategy: 'Bridge spETH to Linea → access L2 yield' },
+          { protocol: 'QiDAO (MAI)', type: 'CDP / Stablecoin', apy: 7.2, tvl: 4200000, reliability: 78, logo: 'QI', logoColor: '#ff6b6b', strategy: 'spETH as collateral → mint MAI stablecoin', url: 'https://app.mai.finance/vaults' },
+          { protocol: 'Lynex', type: 'DEX / LP', apy: 9.8, tvl: 2100000, reliability: 65, logo: 'LX', logoColor: '#06b6d4', strategy: 'spETH-MAI LP with concentrated liquidity', url: 'https://app.lynex.fi/liquidity' },
+          { protocol: 'Velodrome', type: 'DEX / Farm', apy: 8.4, tvl: 3500000, reliability: 72, logo: 'VD', logoColor: '#3b82f6', strategy: 'Incentivized spETH pools + VELO rewards', url: 'https://velodrome.finance/liquidity' },
+          { protocol: 'TENET Network', type: 'Cross-chain Delegation', apy: 5.1, tvl: 6800000, reliability: 70, logo: 'TN', logoColor: '#8b5cf6', strategy: 'Delegate spETH cross-chain for extra rewards', url: 'https://app.tenet.org/staking' },
+          { protocol: 'Linea (Bridged)', type: 'L2 DeFi', apy: 4.5, tvl: 1900000, reliability: 62, logo: 'LN', logoColor: '#61dfff', strategy: 'Bridge spETH to Linea → access L2 yield', url: 'https://bridge.linea.build/' },
         ]
       },
       {
@@ -769,8 +790,8 @@
         totalStaked: '$12.6M',
         note: 'Leveraged liquid staking — higher APY via SOL borrow loop',
         integrations: [
-          { protocol: 'Jupiter', type: 'DEX / Swap', apy: 10.2, tvl: 8700000, reliability: 92, logo: 'JP', logoColor: '#14f195', strategy: 'Trade mpSOL on Jupiter aggregator' },
-          { protocol: 'Coinstore Web3', type: 'Discovery / Trade', apy: 10.2, tvl: 1200000, reliability: 58, logo: 'CS', logoColor: '#f59e0b', strategy: 'mpSOL listed on Coinstore Web3 Discover' },
+          { protocol: 'Jupiter', type: 'DEX / Swap', apy: 10.2, tvl: 8700000, reliability: 92, logo: 'JP', logoColor: '#14f195', strategy: 'Trade mpSOL on Jupiter aggregator', url: 'https://jup.ag/swap/SOL-mpSOL' },
+          { protocol: 'Coinstore Web3', type: 'Discovery / Trade', apy: 10.2, tvl: 1200000, reliability: 58, logo: 'CS', logoColor: '#f59e0b', strategy: 'mpSOL listed on Coinstore Web3 Discover', url: 'https://www.coinstore.com/web3' },
         ]
       },
       {
@@ -782,9 +803,9 @@
         baseApy: 7.2,
         totalStaked: '$9.8M',
         integrations: [
-          { protocol: 'ICPSwap', type: 'DEX / Farm', apy: 10.4, tvl: 2800000, reliability: 72, logo: 'IS', logoColor: '#29abe2', strategy: 'stICP-ICP farm with swap fee yield' },
-          { protocol: 'Sonic DEX', type: 'DEX / LP', apy: 8.9, tvl: 1900000, reliability: 68, logo: 'SN', logoColor: '#ff4757', strategy: 'Concentrated LP stICP-ckUSDT' },
-          { protocol: 'Helix Markets', type: 'Lending', apy: 6.5, tvl: 1200000, reliability: 60, logo: 'HX', logoColor: '#ffa502', strategy: 'Supply stICP as lending collateral' },
+          { protocol: 'ICPSwap', type: 'DEX / Farm', apy: 10.4, tvl: 2800000, reliability: 72, logo: 'IS', logoColor: '#29abe2', strategy: 'stICP-ICP farm with swap fee yield', url: 'https://app.icpswap.com/swap' },
+          { protocol: 'Sonic DEX', type: 'DEX / LP', apy: 8.9, tvl: 1900000, reliability: 68, logo: 'SN', logoColor: '#ff4757', strategy: 'Concentrated LP stICP-ckUSDT', url: 'https://app.sonic.ooo/pools' },
+          { protocol: 'Helix Markets', type: 'Lending', apy: 6.5, tvl: 1200000, reliability: 60, logo: 'HX', logoColor: '#ffa502', strategy: 'Supply stICP as lending collateral', url: 'https://app.helixmarkets.xyz/lend' },
         ]
       },
       {
@@ -797,8 +818,8 @@
         totalStaked: '$4.3M',
         note: 'stIP/IP exchange rate updates ~every 48 hours',
         integrations: [
-          { protocol: 'Story Swap', type: 'DEX / Farm', apy: 15.8, tvl: 980000, reliability: 55, logo: 'SS', logoColor: '#ff6b6b', strategy: 'Early LP incentives — stIP-IP pool' },
-          { protocol: 'IP-Fi Lending', type: 'Lending', apy: 9.2, tvl: 620000, reliability: 48, logo: 'IF', logoColor: '#ffc048', strategy: 'Supply stIP → borrow against IP assets' },
+          { protocol: 'Story Swap', type: 'DEX / Farm', apy: 15.8, tvl: 980000, reliability: 55, logo: 'SS', logoColor: '#ff6b6b', strategy: 'Early LP incentives — stIP-IP pool', url: 'https://storyswap.io/pools' },
+          { protocol: 'IP-Fi Lending', type: 'Lending', apy: 9.2, tvl: 620000, reliability: 48, logo: 'IF', logoColor: '#ffc048', strategy: 'Supply stIP → borrow against IP assets', url: 'https://ipfi.io/lend' },
         ]
       }
     ];
@@ -883,36 +904,39 @@
           </div>
           <div class="integrations-grid">
             ${sorted.map((integ, idx) => `
-              <div class="integration-card ${integ.apy === bestApy ? 'best-yield' : ''}">
-                <span class="rank">#${idx + 1}</span>
-                <div class="integration-top">
-                  <div class="protocol-logo" style="background: ${integ.logoColor}">${integ.logo}</div>
-                  <div class="protocol-info">
-                    <div class="protocol-name">${integ.protocol}</div>
-                    <div class="protocol-type">${integ.type}</div>
-                  </div>
-                </div>
-                <div class="integration-metrics">
-                  <div>
-                    <div class="metric-label">Total APY</div>
-                    <div class="metric-value apy">${integ.apy}%</div>
-                  </div>
-                  <div>
-                    <div class="metric-label">TVL</div>
-                    <div class="metric-value tvl">${formatTvl(integ.tvl)}</div>
-                  </div>
-                  <div>
-                    <div class="metric-label">Reliability</div>
-                    <div class="depth-bar-container">
-                      <div class="depth-bar">
-                        <div class="depth-bar-fill ${reliabilityClass(integ.reliability)}" style="width: ${integ.reliability}%"></div>
-                      </div>
-                      <div class="depth-label">${reliabilityLabel(integ.reliability)}</div>
+              <a href="${integ.url}" target="_blank" rel="noopener noreferrer" class="integration-card-link">
+                <div class="integration-card ${integ.apy === bestApy ? 'best-yield' : ''}">
+                  <span class="rank">#${idx + 1}</span>
+                  <div class="card-external-icon">&#x2197;</div>
+                  <div class="integration-top">
+                    <div class="protocol-logo" style="background: ${integ.logoColor}">${integ.logo}</div>
+                    <div class="protocol-info">
+                      <div class="protocol-name">${integ.protocol}</div>
+                      <div class="protocol-type">${integ.type}</div>
                     </div>
                   </div>
+                  <div class="integration-metrics">
+                    <div>
+                      <div class="metric-label">Total APY</div>
+                      <div class="metric-value apy">${integ.apy}%</div>
+                    </div>
+                    <div>
+                      <div class="metric-label">TVL</div>
+                      <div class="metric-value tvl">${formatTvl(integ.tvl)}</div>
+                    </div>
+                    <div>
+                      <div class="metric-label">Reliability</div>
+                      <div class="depth-bar-container">
+                        <div class="depth-bar">
+                          <div class="depth-bar-fill ${reliabilityClass(integ.reliability)}" style="width: ${integ.reliability}%"></div>
+                        </div>
+                        <div class="depth-label">${reliabilityLabel(integ.reliability)}</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="strategy-tag">⚡ ${integ.strategy}</div>
                 </div>
-                <div class="strategy-tag">⚡ ${integ.strategy}</div>
-              </div>
+              </a>
             `).join('')}
           </div>
         `;
